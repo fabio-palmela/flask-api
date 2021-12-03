@@ -1,0 +1,29 @@
+1 - Atualize o gerenciador pip
+python -m pip install --upgrade pip
+
+2 - Ative a biblioteca virtualenv
+pip install virtualenv --user
+
+3 - Se necessário conceda permissão ao usuário na pasta do python 
+#Conceder permissão na pasta C:\Users\User\AppData\Local\Microsoft\WindowsApps
+#https://stackoverflow.com/questions/56974927/permission-denied-trying-to-run-python-on-windows-10
+#Definir variável de ambiente para a versão do python 
+#C:\Users\User\AppData\Local\Programs\Python\Python38\Scripts
+
+4 - Para ativar um ambiente virtual específico digite source [nome do ambiente]/Scripts/activate
+source ambienteVirtualName/Scripts/activate
+
+4.1 - Para desativar 
+desactivate
+
+5 - Testa quais bibliotecas estão instaladas.
+pip freeze
+
+6 - Instalar biblioteca de API (Flask)
+pip install flask
+
+7 - Instalar biblioteca Restfull (RESTAPI)
+pip install Flask-Restful
+
+8 - Crie requirements.txt atraves do pip freeze e execute o mesmo ambiente em qualquer máquina.
+pip install -r requirements.txt
