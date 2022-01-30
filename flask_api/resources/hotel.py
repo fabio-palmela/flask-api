@@ -1,42 +1,19 @@
 from flask_restful import Resource, reqparse
 from models.hotel import HotelModel
 
-hoteis = [
-    {
-        'hotel_id': 1,
-        'nome': 'Alpha', 
-        'diaria': 430.02,
-        'cidade': 'São Paulo',
-        'estrelas': 4
-    }, 
-    {
-        'hotel_id': 2,
-        'nome': 'Omega', 
-        'diaria': 40.02,
-        'cidade': 'Contagem',
-        'estrelas': 1
-    },
-    {
-        'hotel_id': 3,
-        'nome': 'Beta', 
-        'diaria': 1430.02,
-        'cidade': 'São Bernardo',
-        'estrelas': 5
-    }
-]
-
 class Hoteis(Resource):
     def get(self):
         return {'hoteis': [hotel.json() for hotel in HotelModel.query.all()]}
 
-    # def get_hoteis_por_cidade(self):
-    #     return {'hoteis': [hotel.json() for hotel in HotelModel.query.filter_by(cidade='Sabará').all()]}
+    def get_hoteis_por_cidade(self):
+        dados = Hotel.argumentos.parse_args()
+        return {'hoteis': [hotel.json() for hotel in HotelModel.query.filter_by(cidade=dados['Sabará']).all()]}
           
 class Hotel(Resource):
     #add_arguments aceita apenas argumentos necessários eliminando outros enviados na requisição
     argumentos = reqparse.RequestParser()
-    argumentos.add_argument('nome') 
-    argumentos.add_argument('estrelas')
+    argumentos.add_argument('nome', type=str, required=True, help="The field 'nome' cannot be left blank.") 
+    argumentos.add_argument('estrelas', type=float, help="The field 'estrelas' must be of type float")
     argumentos.add_argument('diaria')
     argumentos.add_argument('cidade')
     
@@ -56,7 +33,10 @@ class Hotel(Resource):
             return hotel_encontrado.json(), 200
         
         novo_hotel = HotelModel(hotel_id, **dados)
-        novo_hotel.save_hotel()
+        try:
+            hotel.save_hotel()
+        except:
+            return {'message': 'An internal error ocurred trying to save hotel.'}, 500
         return novo_hotel.json(), 201       
     
     def post(self, hotel_id):
@@ -65,12 +45,18 @@ class Hotel(Resource):
 
         dados = Hotel.argumentos.parse_args()
         hotel = HotelModel(hotel_id, **dados)
-        hotel.save_hotel()
+        try:
+            hotel.save_hotel()
+        except:
+            return {'message': 'An internal error ocurred trying to save hotel.'}, 500
         return hotel.json()
      
     def delete(self, hotel_id):
         hotel = HotelModel.find_hotel(hotel_id)
         if hotel:
-            hotel.remove_hotel()
+            try:
+                hotel.remove_hotel()
+            except:
+                return {'message': 'An internal error ocurred trying to save hotel.'}, 500
             return {'message': 'Hotel deleted.'}
         return {'message': 'Hotel not found.'}, 404
