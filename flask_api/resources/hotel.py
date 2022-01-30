@@ -27,12 +27,10 @@ hoteis = [
 
 class Hoteis(Resource):
     def get(self):
-        hoteis = HotelModel.find_hoteis()
-        if (hoteis):
-            return hoteis.json()
-        else:
-            return {'message': 'Hotel not found.'}, 404
-        return hoteis[1]
+        return {'hoteis': [hotel.json() for hotel in HotelModel.query.all()]}
+
+    # def get_hoteis_por_cidade(self):
+    #     return {'hoteis': [hotel.json() for hotel in HotelModel.query.filter_by(cidade='Sabará').all()]}
           
 class Hotel(Resource):
     #add_arguments aceita apenas argumentos necessários eliminando outros enviados na requisição

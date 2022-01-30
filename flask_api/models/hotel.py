@@ -29,15 +29,7 @@ class HotelModel(banco.Model):
         hotel = cls.query.filter_by(hotel_id=hotel_id).first()
         if hotel:
             return hotel
-        return False
-
-    @classmethod
-    def find_hoteis(cls):
-        hoteis = cls.query.all()
-        object_methods = [method_name for method_name in dir(hoteis)
-                  if callable(getattr(hoteis, method_name))]
-        print(object_methods)
-        
+        return False        
 
     def save_hotel(self):
         banco.session.add(self)
