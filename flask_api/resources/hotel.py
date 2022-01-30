@@ -26,8 +26,13 @@ hoteis = [
 ]
 
 class Hoteis(Resource):
-     def get(self):
-         return hoteis[1]
+    def get(self):
+        hoteis = HotelModel.find_hoteis()
+        if (hoteis):
+            return hoteis.json()
+        else:
+            return {'message': 'Hotel not found.'}, 404
+        return hoteis[1]
           
 class Hotel(Resource):
     #add_arguments aceita apenas argumentos necessários eliminando outros enviados na requisição
@@ -37,18 +42,6 @@ class Hotel(Resource):
     argumentos.add_argument('diaria')
     argumentos.add_argument('cidade')
     
-    def gera_novo_hotel():
-        novo_id = max(item['hotel_id'] for item in hoteis)
-        dados = Hotel.argumentos.parse_args()
-        objHotel = HotelModel(novo_id + 1, **dados)
-        hoteis.append(objHotel.json())
-        
-    def update_hotel(hotel, hotel_id):
-        dados = Hotel.argumentos.parse_args()
-        objHotel = HotelModel(hotel_id, **dados)
-        hotel.update(objHotel.json())
-    
-    
     def get(self, hotel_id):
         hotel = HotelModel.find_hotel(hotel_id)
         if (hotel):
@@ -57,13 +50,16 @@ class Hotel(Resource):
             return {'message': 'Hotel not found.'}, 404
      
     def put(self, hotel_id):
-        hotel = Hotel.find_hotel(hotel_id)
-        if (hotel):
-            Hotel.update_hotel(hotel, hotel_id)
-            return Hotel.get(Hotel, hotel_id), 200
-        else:
-            Hotel.gera_novo_hotel()
-            return Hotel.get(Hotel, hotel_id), 201            
+        dados = Hotel.argumentos.parse_args()
+        hotel_encontrado = HotelModel.find_hotel(hotel_id)
+        if hotel_encontrado:
+            hotel_encontrado.update_hotel(**dados)
+            hotel_encontrado.save_hotel()
+            return hotel_encontrado.json(), 200
+        
+        novo_hotel = HotelModel(hotel_id, **dados)
+        novo_hotel.save_hotel()
+        return novo_hotel.json(), 201       
     
     def post(self, hotel_id):
         if HotelModel.find_hotel(hotel_id):

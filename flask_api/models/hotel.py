@@ -31,6 +31,26 @@ class HotelModel(banco.Model):
             return hotel
         return False
 
+    @classmethod
+    def find_hoteis(cls):
+        hoteis = cls.query.all()
+        object_methods = [method_name for method_name in dir(hoteis)
+                  if callable(getattr(hoteis, method_name))]
+        print(object_methods)
+        
+
     def save_hotel(self):
         banco.session.add(self)
         banco.session.commit()
+
+    def update_hotel(self, nome, estrelas, diaria, cidade):
+        self.nome = nome
+        self.estrelas = estrelas
+        self.diaria = diaria
+        self.cidade = cidade
+
+        # def gera_novo_hotel():
+        # novo_id = max(item['hotel_id'] for item in hoteis)
+        # dados = Hotel.argumentos.parse_args()
+        # objHotel = HotelModel(novo_id + 1, **dados)
+        # hoteis.append(objHotel.json())
