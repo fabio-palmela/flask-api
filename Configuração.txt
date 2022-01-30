@@ -10,10 +10,14 @@ pip install virtualenv --user
 #Definir variável de ambiente para a versão do python 
 #C:\Users\User\AppData\Local\Programs\Python\Python38\Scripts
 
-4 - Para ativar um ambiente virtual específico digite source [nome do ambiente]/Scripts/activate
+4 - Criar ambiente virtual.
+python -m venv [nome do ambiente virtual]
+Ex: python -m venv ambienteVirtualName
+
+4.1 - Para ativar um ambiente virtual específico digite source [nome do ambiente]/Scripts/activate
 source ambienteVirtualName/Scripts/activate
 
-4.1 - Para desativar 
+4.2 - Para desativar 
 desactivate
 
 5 - Testa quais bibliotecas estão instaladas.

@@ -24,6 +24,24 @@ hoteis = [
     }
 ]
 
+class HotelModel:
+    def __init__(self, hotel_id, nome, estrelas, diaria, cidade):
+        self.hotel_id = hotel_id
+        self.nome = nome
+        self.estrelas = estrelas
+        self.diaria = diaria
+        self.cidade = cidade
+
+    def json(self):
+        return {
+            'hotel_id': self.hotel_id,
+            'nome': self.nome,
+            'estrelas': self.estrelas,
+            'diaria': self.diaria,
+            'cidade': self.cidade
+        }
+
+
 class Hoteis(Resource):
      def get(self):
          return hoteis
@@ -47,19 +65,13 @@ class Hotel(Resource):
     def gera_novo_hotel():
         novo_id = max(item['hotel_id'] for item in hoteis)
         dados = Hotel.argumentos.parse_args()
-        novo_hotel = {
-            'hotel_id': novo_id + 1,
-            **dados
-        }
-        hoteis.append(novo_hotel)
+        objHotel = HotelModel(novo_id + 1, **dados)
+        hoteis.append(objHotel.json())
         
     def update_hotel(hotel, hotel_id):
         dados = Hotel.argumentos.parse_args()
-        novo_hotel = {
-            'hotel_id': hotel_id,
-            **dados
-        }
-        hotel.update(novo_hotel)
+        objHotel = HotelModel(hotel_id, **dados)
+        hotel.update(objHotel.json())
     
     
     def get(self, hotel_id):
