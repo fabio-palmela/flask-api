@@ -31,3 +31,9 @@ class UserModel(banco.Model):
     def remove_user(self):
         banco.session.delete(self)
         banco.session.commit()
+    @classmethod
+    def find_by_login(cls, login):
+        user_login = cls.query.filter_by(login = login).first()
+        if user_login: 
+            return user_login
+        return False
