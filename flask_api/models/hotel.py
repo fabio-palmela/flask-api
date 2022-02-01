@@ -44,10 +44,3 @@ class HotelModel(banco.Model):
     def remove_hotel(self):
         banco.session.delete(self)
         banco.session.commit()
-
-
-        # def gera_novo_hotel():
-        # novo_id = max(item['hotel_id'] for item in hoteis)
-        # dados = Hotel.argumentos.parse_args()
-        # objHotel = HotelModel(novo_id + 1, **dados)
-        # hoteis.append(objHotel.json())
