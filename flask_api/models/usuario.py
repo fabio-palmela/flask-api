@@ -1,6 +1,6 @@
 from sql_alchemy import banco
 
-class HotelModel(banco.Model):
+class UserModel(banco.Model):
     __tablename__ = 'usuarios'
     user_id = banco.Column(banco.Integer, primary_key=True)
     login = banco.Column(banco.String(40))
@@ -28,6 +28,6 @@ class HotelModel(banco.Model):
         banco.session.add(self)
         banco.session.commit()
 
-    def remove_hotel(self):
+    def remove_user(self):
         banco.session.delete(self)
         banco.session.commit()
