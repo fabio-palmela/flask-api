@@ -1,35 +1,8 @@
 from flask_restful import Resource, reqparse
 from models.hotel import HotelModel
+from resources.filtros import normalize_path_params, consulta_sem_cidade, consulta_com_cidade
 from flask_jwt_extended import jwt_required
 import sqlite3
-
-def normalize_path_params(
-    cidade=None,
-    estrelas_min=0,
-    estrelas_max=5,
-    diaria_min=0,
-    diaria_max=10000,
-    limit=50,
-    offset=0, **dados
-):
-    if cidade:
-        return {
-            'estrelas_min':estrelas_min,
-            'estrelas_max':estrelas_max,
-            'diaria_min':diaria_min,
-            'diaria_max':diaria_max,
-            'cidade':cidade,
-            'limit':limit,
-            'offset':offset
-        }
-    return {
-            'estrelas_min':estrelas_min,
-            'estrelas_max':estrelas_max,
-            'diaria_min':diaria_min,
-            'diaria_max':diaria_max,
-            'limit':limit,
-            'offset':offset
-        }
 
 #EXEMPLO DE FILTRO POR CAMPO
 #path /hoteis?cidade=Rio de Janeiro&estrelas_min=4&diaria_max=400
@@ -51,24 +24,11 @@ class Hoteis(Resource):
         dados_validos = {chave:dados[chave] for chave in dados if dados[chave] is not None}
         parametros = normalize_path_params(**dados_validos)
         if not parametros.get('cidade'):
-            sql = """
-            SELECT * FROM hoteis
-             WHERE (estrelas > ? AND estrelas < ?)
-               AND (diaria > ? AND diaria < ?)
-             LIMIT ? OFFSET ?  
-            """
             params_tupla = tuple([parametros[chave] for chave in parametros])
-            resultado = cursor.execute(sql, params_tupla)
+            resultado = cursor.execute(consulta_sem_cidade, params_tupla)
         else:
-            sql = """
-            SELECT * FROM hoteis
-             WHERE (estrelas > ? AND estrelas < ?)
-               AND (diaria > ? AND diaria < ?)
-               AND (cidade = ?)
-             LIMIT ? OFFSET ?  
-            """
             params_tupla = tuple([parametros[chave] for chave in parametros])
-            resultado = cursor.execute(sql, params_tupla)
+            resultado = cursor.execute(consulta_com_cidade, params_tupla)
 
         hoteis = []
         for linha in resultado:
