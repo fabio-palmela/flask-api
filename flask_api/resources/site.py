@@ -27,4 +27,4 @@ class Site(Resource):
         if site:
             site.remove_site()
             return {'message': "Site deleted."}
-        return {'message': "The not found."}, 404
+        return {'message': "Site not found."}, 404
