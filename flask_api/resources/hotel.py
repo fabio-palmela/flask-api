@@ -53,6 +53,7 @@ class Hotel(Resource):
     argumentos.add_argument('estrelas', type=float, help="The field 'estrelas' must be of type float")
     argumentos.add_argument('diaria')
     argumentos.add_argument('cidade')
+    argumentos.add_argument('site_id', type=int, required=True, help="Every hotel needs to be linked site")
     
     def get(self, hotel_id):
         hotel = HotelModel.find_hotel(hotel_id)
@@ -72,8 +73,8 @@ class Hotel(Resource):
         
         novo_hotel = HotelModel(hotel_id, **dados)
         try:
-            hotel.save_hotel()
-        except:
+            novo_hotel.save_hotel()
+        except Exception as e:
             return {'message': 'An internal error ocurred trying to save hotel.'}, 500
         return novo_hotel.json(), 201       
     
@@ -86,7 +87,8 @@ class Hotel(Resource):
         hotel = HotelModel(hotel_id, **dados)
         try:
             hotel.save_hotel()
-        except:
+        except Exception as e:
+            print(e)
             return {'message': 'An internal error ocurred trying to save hotel.'}, 500
         return hotel.json()
      
