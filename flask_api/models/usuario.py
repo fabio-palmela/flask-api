@@ -1,3 +1,4 @@
+from email.policy import default
 from sql_alchemy import banco
 
 class UserModel(banco.Model):
@@ -5,16 +6,19 @@ class UserModel(banco.Model):
     user_id = banco.Column(banco.Integer, primary_key=True)
     login = banco.Column(banco.String(40))
     senha = banco.Column(banco.String(40))
+    ativado = banco.Column(banco.Boolean, default=False)
 
-    def __init__(self, login, senha):
+    def __init__(self, login, senha, ativado):
         self.login = login
         self.senha = senha
+        self.senha = ativado
 
     def json(self):
         return {
             'user_id': self.user_id,
             'login': self.login,
-            'senha': self.senha
+            'senha': self.senha,
+            'ativado': self.ativado,
         }
 
     @classmethod
